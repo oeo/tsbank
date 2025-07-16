@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      edgedb:
+        image: edgedb/edgedb:latest
+        env:
+          EDGEDB_SERVER_SECURITY: insecure_dev_mode
+        ports:
+          - 5656:5656
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 5672:5672
+          - 15672:15672
+        env:
+          RABBITMQ_DEFAULT_USER: banking
+          RABBITMQ_DEFAULT_PASS: banking123
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+
+    - name: Install dependencies
+      run: bun install
+
+    - name: Run database migrations
+      run: bunx edgedb migrate
+      env:
+        EDGEDB_HOST: localhost
+
+    - name: Run tests
+      run: bun test
+      env:
+        # We need to tell the app where the services are running.
+        # In GitHub Actions services, the service name is used as the hostname.
+        EDGEDB_HOST: edgedb
+        REDIS_HOST: redis
+        RABBITMQ_HOST: rabbitmq 

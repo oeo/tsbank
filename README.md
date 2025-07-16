@@ -1,5 +1,9 @@
 # Core Banking DDD System
 
+![CI](./actions/workflows/ci.yml/badge.svg)
+
+# TSBank
+
 A Domain-Driven Design (DDD) core banking system with event sourcing, built with Bun and TypeScript. This system is designed to be highly configurable and extensible, allowing for different features, business rules, and integrations to be enabled per deployment.
 
 ## 🚀 Quick Start
