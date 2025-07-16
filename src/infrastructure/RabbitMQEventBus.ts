@@ -22,9 +22,10 @@ export class RabbitMQEventBus implements EventBus {
    */
   public async connect(): Promise<void> {
     try {
-      this.connection = await amqp.connect(this.connectionString);
+      this.connection = (await amqp.connect(this.connectionString)) as any;
+      // @ts-ignore
       this.channel = await this.connection.createChannel();
-      await this.channel.assertExchange(EXCHANGE_NAME, EXCHANGE_TYPE, {
+      await this.channel?.assertExchange(EXCHANGE_NAME, EXCHANGE_TYPE, {
         durable: true,
       });
       logger.info('Connected to RabbitMQ');
@@ -46,7 +47,7 @@ export class RabbitMQEventBus implements EventBus {
     const message = Buffer.from(JSON.stringify(event));
 
     this.channel.publish(EXCHANGE_NAME, routingKey, message, {
-        persistent: true,
+      persistent: true,
     });
   }
 
@@ -67,9 +68,9 @@ export class RabbitMQEventBus implements EventBus {
     this.channel.consume(queue, (msg) => {
       if (msg) {
         try {
-            const event = JSON.parse(msg.content.toString()) as DomainEvent;
-            callback(event);
-            this.channel?.ack(msg);
+          const event = JSON.parse(msg.content.toString()) as DomainEvent;
+          callback(event);
+          this.channel?.ack(msg);
         } catch (error) {
           logger.error('Error processing RabbitMQ message:', error);
           this.channel?.nack(msg, false, false); // Don't requeue
@@ -83,6 +84,7 @@ export class RabbitMQEventBus implements EventBus {
    */
   public async close(): Promise<void> {
     await this.channel?.close();
+    // @ts-ignore
     await this.connection?.close();
     logger.info('RabbitMQ connection closed.');
   }

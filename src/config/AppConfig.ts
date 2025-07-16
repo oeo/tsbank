@@ -1,6 +1,7 @@
 /**
  * @file AppConfig.ts
  */
+
 import { readFileSync } from 'fs';
 import { parse } from 'yaml';
 
