@@ -1,0 +1,106 @@
+# Bank Configuration
+bank:
+  name: "First National Bitcoin Bank"
+  code: "FNBB"
+  country: "USA"
+  timezone: "America/New_York"
+  currency: "USD"
+
+branding:
+  logo_url: "https://example.com/logo.png"
+  primary_color: "#1a73e8"
+  secondary_color: "#34a853"
+  theme: "dark"
+
+server:
+  port: 3000
+
+rabbitmq:
+  url: "amqp://banking:banking123@rabbitmq:5672"
+
+# Feature Flags
+features:
+  bitcoin_collateral: true
+  real_time_fraud_detection: true
+  automated_compliance: true
+  multi_currency: false
+  instant_payments: true
+  loan_origination: true
+  savings_accounts: true
+  business_accounts: false
+
+# Business Rules & Limits
+limits:
+  daily_transaction_limit: 50000
+  monthly_transaction_limit: 500000
+  loan_to_value_ratio: 0.5
+  minimum_collateral_ratio: 1.5
+  maximum_loan_amount: 1000000
+  minimum_account_balance: 100
+  withdrawal_limits:
+    checking: 5000
+    savings: 2000
+    bitcoin_collateral: 10000
+
+# Integrations
+integrations:
+  kyc:
+    provider: "jumio" # or onfido, persona
+    enabled: true
+
+  custody:
+    provider: "bitgo" # or fireblocks, coinbase
+    enabled: true
+
+  fraud:
+    provider: "kount" # kount, sift, none
+    enabled: true
+
+  compliance:
+    provider: "us_compliance" # us_compliance, eu_compliance, canada_compliance
+    enabled: true
+
+  payments:
+    provider: "stripe" # stripe, plaid
+    enabled: true
+
+  price_feeds:
+    primary: "coinbase" # coinbase, binance, kraken
+    secondary: "binance"
+    enabled: true
+
+# Risk Management
+risk:
+  default_customer_risk_level: 3
+  auto_approve_threshold: 2
+  manual_review_threshold: 4
+  block_threshold: 5
+
+  collateral_monitoring:
+    price_check_interval: 300 # seconds
+    margin_call_threshold: 1.25
+    liquidation_threshold: 1.1
+
+# Compliance Rules
+compliance:
+  kyc_required: true
+  aml_monitoring: true
+  suspicious_activity_threshold: 10000
+  currency_transaction_report_threshold: 10000
+
+  reporting:
+    daily_reports: true
+    weekly_reports: true
+    monthly_reports: true
+
+# Jurisdiction Specific
+jurisdiction:
+  code: "US"
+  regulations:
+    - "BSA" # Bank Secrecy Act
+    - "PATRIOT_ACT"
+    - "FDIC"
+
+  required_licenses:
+    - "MONEY_TRANSMITTER"
+    - "BANKING_LICENSE" 

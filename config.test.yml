@@ -1,0 +1,3 @@
+# Test-specific overrides
+rabbitmq:
+  url: "amqp://banking:banking123@localhost:5672" 
