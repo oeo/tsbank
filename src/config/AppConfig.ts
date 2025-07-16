@@ -126,15 +126,19 @@ class ConfigLoader {
         } catch (e) {
           this.config = baseConfig as AppConfig;
           if (e instanceof Error && 'code' in e && e.code === 'ENOENT') {
-            console.warn('Could not find config.test.yml. Using default config for tests.');
+            console.warn(
+              'Could not find config.test.yml. Using default config for tests.'
+            );
           } else {
-            console.warn('An unexpected error occurred while loading config.test.yml:', e);
+            console.warn(
+              'An unexpected error occurred while loading config.test.yml:',
+              e
+            );
           }
         }
       } else {
         this.config = baseConfig as AppConfig;
       }
-
     } catch (error) {
       console.error('Failed to load config.yml:', error);
       process.exit(1);
@@ -163,7 +167,9 @@ class ConfigLoader {
     return this.get().integrations[integration].enabled;
   }
 
-  getLimit<K extends keyof AppConfig['limits']>(limit: K): AppConfig['limits'][K] {
+  getLimit<K extends keyof AppConfig['limits']>(
+    limit: K
+  ): AppConfig['limits'][K] {
     return this.get().limits[limit];
   }
 
@@ -176,4 +182,4 @@ class ConfigLoader {
   }
 }
 
-export const config = new ConfigLoader(); 
+export const config = new ConfigLoader();
