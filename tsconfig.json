@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    // Adding a comment to force a TS server restart
     "target": "es2022",
     "module": "esnext",
     "lib": ["es2022"],

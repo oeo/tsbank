@@ -4,6 +4,7 @@
 
 import { readFileSync } from 'fs';
 import { parse } from 'yaml';
+import { merge } from 'lodash';
 
 export interface AppConfig {
   bank: {
@@ -104,51 +105,36 @@ export interface AppConfig {
   };
 }
 
-// Simple deep merge helper
-const mergeDeep = (target: any, source: any): any => {
-  const output = { ...target };
-  if (isObject(target) && isObject(source)) {
-    Object.keys(source).forEach((key) => {
-      if (isObject(source[key])) {
-        if (!(key in target)) Object.assign(output, { [key]: source[key] });
-        else output[key] = mergeDeep(target[key], source[key]);
-      } else {
-        Object.assign(output, { [key]: source[key] });
-      }
-    });
-  }
-  return output;
-};
-
-const isObject = (item: any): item is Record<string, any> => {
-  return item && typeof item === 'object' && !Array.isArray(item);
-};
-
 class ConfigLoader {
-  private config: AppConfig;
+  private config!: AppConfig;
 
   constructor() {
-    this.loadConfig();
+    this.#loadConfig();
   }
 
-  private loadConfig(): void {
+  #loadConfig(): void {
     try {
       const configFile = readFileSync('config.yml', 'utf8');
-      this.config = parse(configFile) as AppConfig;
+      const baseConfig = parse(configFile);
 
       // If in test environment, load and merge test config
       if (process.env.NODE_ENV === 'test') {
         try {
           const testConfigFile = readFileSync('config.test.yml', 'utf8');
-          const testConfig = parse(testConfigFile) as Record<string, any>;
-          this.config = mergeDeep(this.config, testConfig) as AppConfig;
-        } catch (error: any) {
-          // It's okay if the test config doesn't exist
-          console.warn(
-            'Could not load config.test.yml. Using default config for tests.'
-          );
+          const testConfig = parse(testConfigFile);
+          this.config = merge(baseConfig, testConfig);
+        } catch (e) {
+          this.config = baseConfig as AppConfig;
+          if (e instanceof Error && 'code' in e && e.code === 'ENOENT') {
+            console.warn('Could not find config.test.yml. Using default config for tests.');
+          } else {
+            console.warn('An unexpected error occurred while loading config.test.yml:', e);
+          }
         }
+      } else {
+        this.config = baseConfig as AppConfig;
       }
+
     } catch (error) {
       console.error('Failed to load config.yml:', error);
       process.exit(1);
@@ -160,34 +146,34 @@ class ConfigLoader {
   }
 
   getBankName(): string {
-    return this.config.bank.name;
+    return this.get().bank.name;
   }
 
   isFeatureEnabled(feature: keyof AppConfig['features']): boolean {
-    return this.config.features[feature];
+    return this.get().features[feature];
   }
 
   getIntegrationProvider(
     integration: keyof Omit<AppConfig['integrations'], 'price_feeds'>
   ): string {
-    return this.config.integrations[integration].provider;
+    return this.get().integrations[integration].provider;
   }
 
   isIntegrationEnabled(integration: keyof AppConfig['integrations']): boolean {
-    return this.config.integrations[integration].enabled;
+    return this.get().integrations[integration].enabled;
   }
 
-  getLimit(limit: string): number {
-    return this.config.limits[limit as keyof AppConfig['limits']] as number;
+  getLimit<K extends keyof AppConfig['limits']>(limit: K): AppConfig['limits'][K] {
+    return this.get().limits[limit];
   }
 
   getJurisdictionCode(): string {
-    return this.config.jurisdiction.code;
+    return this.get().jurisdiction.code;
   }
 
   getRequiredLicenses(): string[] {
-    return this.config.jurisdiction.required_licenses;
+    return this.get().jurisdiction.required_licenses;
   }
 }
 
-export const config = new ConfigLoader();
+export const config = new ConfigLoader(); 
