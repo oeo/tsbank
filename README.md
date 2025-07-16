@@ -59,8 +59,8 @@ This file holds all secrets and environment-specific connection strings. It shou
 
 The system is architected using principles of Domain-Driven Design (DDD) and Event Sourcing.
 
-### Domains
-The core business logic is segregated into domains, each representing a distinct part of the banking business:
+### Core 
+The core business logic is segregated into modules located in `core`, each representing a distinct part of the banking business:
 - **`customers`**: Manages customer information, onboarding, and KYC status.
 - **`accounts`**: Handles creation and management of customer accounts (checking, savings, etc.).
 - **`transactions`**: Responsible for processing all money movements.
