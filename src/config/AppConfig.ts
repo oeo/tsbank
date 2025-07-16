@@ -106,24 +106,22 @@ export interface AppConfig {
 
 // Simple deep merge helper
 const mergeDeep = (target: any, source: any): any => {
-    const output = { ...target };
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-            if (isObject(source[key])) {
-                if (!(key in target))
-                    Object.assign(output, { [key]: source[key] });
-                else
-                    output[key] = mergeDeep(target[key], source[key]);
-            } else {
-                Object.assign(output, { [key]: source[key] });
-            }
-        });
-    }
-    return output;
+  const output = { ...target };
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach((key) => {
+      if (isObject(source[key])) {
+        if (!(key in target)) Object.assign(output, { [key]: source[key] });
+        else output[key] = mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(output, { [key]: source[key] });
+      }
+    });
+  }
+  return output;
 };
 
 const isObject = (item: any): item is Record<string, any> => {
-    return (item && typeof item === 'object' && !Array.isArray(item));
+  return item && typeof item === 'object' && !Array.isArray(item);
 };
 
 class ConfigLoader {
@@ -146,10 +144,11 @@ class ConfigLoader {
           this.config = mergeDeep(this.config, testConfig) as AppConfig;
         } catch (error: any) {
           // It's okay if the test config doesn't exist
-          console.warn('Could not load config.test.yml. Using default config for tests.');
+          console.warn(
+            'Could not load config.test.yml. Using default config for tests.'
+          );
         }
       }
-
     } catch (error) {
       console.error('Failed to load config.yml:', error);
       process.exit(1);
@@ -191,4 +190,4 @@ class ConfigLoader {
   }
 }
 
-export const config = new ConfigLoader(); 
+export const config = new ConfigLoader();

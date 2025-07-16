@@ -23,4 +23,4 @@ export abstract class ValueObject<T extends Record<string, any>> {
     }
     return shallowEqual(this.props, vo.props);
   }
-} 
+}

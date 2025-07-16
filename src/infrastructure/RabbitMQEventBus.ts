@@ -88,4 +88,4 @@ export class RabbitMQEventBus implements EventBus {
     await this.connection?.close();
     logger.info('RabbitMQ connection closed.');
   }
-} 
+}

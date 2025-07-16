@@ -43,7 +43,7 @@ export class Money extends ValueObject<MoneyProps> {
    * create from props
    */
   public static from(props: MoneyProps): Money {
-      return new Money(props);
+    return new Money(props);
   }
 
   /**
@@ -71,4 +71,4 @@ export class Money extends ValueObject<MoneyProps> {
       currency: this.currency,
     });
   }
-} 
+}

@@ -34,11 +34,17 @@ const transactionRepo = new TransactionRepository();
 
 const customerService = new CustomerService(customerRepo, eventBus);
 const accountService = new AccountService(accountRepo, eventBus);
-const transactionService = new TransactionService(transactionRepo, accountRepo, eventBus);
-
+const transactionService = new TransactionService(
+  transactionRepo,
+  accountRepo,
+  eventBus
+);
 
 // Middleware
-app.use('*', honoLogger((message: string) => logger.info(message)));
+app.use(
+  '*',
+  honoLogger((message: string) => logger.info(message))
+);
 
 // Routes
 app.route('/customers', createCustomerRoutes(customerService));
@@ -47,9 +53,9 @@ app.route('/transactions', createTransactionRoutes(transactionService));
 
 // Health check
 app.get('/health', (c) => {
-    return c.json({ status: 'ok' });
+  return c.json({ status: 'ok' });
 });
 
 logger.info('Hono server initialized.');
 
-export default app; 
+export default app;

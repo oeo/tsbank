@@ -9,4 +9,4 @@ const client = createClient();
 
 logger.info('EdgeDB client initialized.');
 
-export { client as edgedb }; 
+export { client as edgedb };

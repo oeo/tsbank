@@ -28,4 +28,4 @@ export abstract class AggregateRoot<T> extends Entity<T> {
   public clearEvents(): void {
     this.domainEvents = [];
   }
-} 
+}

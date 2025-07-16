@@ -13,7 +13,9 @@ export interface DomainEvent {
   version?: number;
 }
 
-export const createDomainEvent = <T extends Omit<DomainEvent, 'eventId' | 'occurredAt'>>(
+export const createDomainEvent = <
+  T extends Omit<DomainEvent, 'eventId' | 'occurredAt'>,
+>(
   event: T
 ): DomainEvent => {
   return {
@@ -21,4 +23,4 @@ export const createDomainEvent = <T extends Omit<DomainEvent, 'eventId' | 'occur
     eventId: uuidv4(),
     occurredAt: new Date(),
   };
-}; 
+};
