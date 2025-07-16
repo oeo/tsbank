@@ -1,6 +1,6 @@
-# Core Banking DDD System
-
 ![CI](./actions/workflows/ci.yml/badge.svg)
+
+# Core Banking DDD System
 
 # TSBank
 

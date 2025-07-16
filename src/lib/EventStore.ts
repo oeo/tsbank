@@ -12,3 +12,10 @@ export interface EventStore {
   ): Promise<void>;
   getEventsForAggregate(aggregateId: string): Promise<DomainEvent[]>;
 }
+
+export class ConcurrencyError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ConcurrencyError';
+  }
+}

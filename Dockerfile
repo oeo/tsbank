@@ -11,6 +11,9 @@ RUN bun install
 # Copy source code
 COPY src ./src
 COPY dbschema ./dbschema
+COPY scripts ./scripts
+COPY config.yml .
+COPY config.test.yml .
 
 # Create non-root user
 RUN adduser -D -s /bin/sh banking

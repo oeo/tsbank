@@ -14,6 +14,8 @@ describe('RabbitMQEventBus Integration Test', () => {
 
     // Set up connection before all tests
     beforeAll(async () => {
+        // Add a delay to allow RabbitMQ to initialize
+        await new Promise(resolve => setTimeout(resolve, 2000));
         eventBus = new RabbitMQEventBus(connectionString);
         await eventBus.connect();
     });

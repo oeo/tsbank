@@ -6,7 +6,7 @@
 import { describe, it, expect, beforeEach } from 'bun:test';
 import { EdgeDBEventStore } from '../../src/infrastructure/EdgeDBEventStore';
 import { createDomainEvent, DomainEvent } from '../../src/lib/DomainEvent';
-import { edgedb } from '../../src/infrastructure/EdgeDBClient';
+import edgedb from '../../src/infrastructure/EdgeDBClient';
 
 describe('EdgeDBEventStore', () => {
     const eventStore = new EdgeDBEventStore();

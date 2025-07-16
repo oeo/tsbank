@@ -40,16 +40,18 @@ jobs:
     - name: Install dependencies
       run: bun install
 
+    - name: Wait for EdgeDB
+      run: bunx edgedb -H localhost -P 5656 --tls-security insecure --user edgedb --wait-until-available 60s query "SELECT 1"
+      
     - name: Run database migrations
-      run: bunx edgedb migrate
-      env:
-        EDGEDB_HOST: localhost
+      run: bunx edgedb -H localhost -P 5656 --tls-security insecure --user edgedb migrate
 
     - name: Run tests
       run: bun test
       env:
         # We need to tell the app where the services are running.
-        # In GitHub Actions services, the service name is used as the hostname.
-        EDGEDB_HOST: edgedb
-        REDIS_HOST: redis
-        RABBITMQ_HOST: rabbitmq 
+        # In GitHub Actions services, the runner connects via localhost.
+        EDGEDB_HOST: localhost
+        EDGEDB_TLS_SECURITY: insecure
+        REDIS_HOST: localhost
+        RABBITMQ_HOST: localhost 

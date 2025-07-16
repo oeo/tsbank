@@ -2,11 +2,11 @@
  * @file EdgeDBClient.ts
  */
 
-import createClient from 'edgedb';
+import * as gel from "gel";
 import { logger } from '../lib/Logger';
 
-const client = createClient();
+const edgedb = gel.createClient();
 
 logger.info('EdgeDB client initialized.');
 
-export { client as edgedb };
+export default edgedb;
