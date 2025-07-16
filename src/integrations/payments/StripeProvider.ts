@@ -4,7 +4,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { PaymentProvider, PaymentIntent } from './PaymentProvider';
-import { logger } from '../../infrastructure/Logger';
+import { logger } from '../../lib/Logger';
 
 export class StripeProvider implements PaymentProvider {
     constructor() {

@@ -2,13 +2,12 @@
  * @file tests/api/transactions.test.ts
  */
 
-// @ts-expect-error
 import { describe, it, expect, mock } from 'bun:test';
 import { Hono } from 'hono';
 import { createTransactionRoutes } from '../../src/api/routes/transactions';
-import { TransactionService } from '../../src/domains/transactions/TransactionService';
-import { Transaction } from '../../src/domains/transactions/Transaction';
-import { Money } from '../../src/shared/Money';
+import { TransactionService } from '../../src/core/transactions/TransactionService';
+import { Transaction } from '../../src/core/transactions/Transaction';
+import { Money } from '../../src/lib/Money';
 
 const mockTransactionService = {
     transfer: mock(async (from, to, amount) => Transaction.create('mock-txn-id', from, to, amount, 'transfer')),
@@ -41,7 +40,7 @@ describe('Transaction API', () => {
         const res = await app.fetch(req);
         expect(res.status).toBe(201);
 
-        const json = await res.json();
+        const json = await res.json() as { id: string };
         expect(json).toHaveProperty('id', 'mock-txn-id');
     });
 
@@ -50,7 +49,7 @@ describe('Transaction API', () => {
         const getRes = await app.fetch(getReq);
         
         expect(getRes.status).toBe(200);
-        const json = await getRes.json();
+        const json = await getRes.json() as { id: string };
         expect(json.id).toBe('mock-txn-id');
     });
 }); 

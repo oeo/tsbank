@@ -5,7 +5,7 @@
 // @ts-ignore
 import { describe, it, expect, beforeAll, afterAll } from 'bun:test';
 import { RabbitMQEventBus } from '../../src/infrastructure/RabbitMQEventBus';
-import { createDomainEvent, DomainEvent } from '../../src/shared/DomainEvent';
+import { createDomainEvent, DomainEvent } from '../../src/lib/DomainEvent';
 import { config } from '../../src/config/AppConfig';
 
 describe('RabbitMQEventBus Integration Test', () => {

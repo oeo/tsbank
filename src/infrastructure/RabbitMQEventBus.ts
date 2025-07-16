@@ -1,11 +1,12 @@
 /**
  * @file RabbitMQEventBus.ts
+ * @description Implements an event bus using RabbitMQ
  */
 
 import * as amqp from 'amqplib';
-import { DomainEvent } from '../shared/DomainEvent';
-import { EventBus } from '../shared/EventBus';
-import { logger } from './Logger';
+import { DomainEvent } from '../lib/DomainEvent';
+import { EventBus } from '../lib/EventBus';
+import { logger } from '../lib/Logger';
 
 const EXCHANGE_NAME = 'domain_events';
 const EXCHANGE_TYPE = 'topic';
@@ -45,7 +46,7 @@ export class RabbitMQEventBus implements EventBus {
     const message = Buffer.from(JSON.stringify(event));
 
     this.channel.publish(EXCHANGE_NAME, routingKey, message, {
-      persistent: true,
+        persistent: true,
     });
   }
 
@@ -66,9 +67,9 @@ export class RabbitMQEventBus implements EventBus {
     this.channel.consume(queue, (msg) => {
       if (msg) {
         try {
-          const event = JSON.parse(msg.content.toString()) as DomainEvent;
-          callback(event);
-          this.channel?.ack(msg);
+            const event = JSON.parse(msg.content.toString()) as DomainEvent;
+            callback(event);
+            this.channel?.ack(msg);
         } catch (error) {
           logger.error('Error processing RabbitMQ message:', error);
           this.channel?.nack(msg, false, false); // Don't requeue

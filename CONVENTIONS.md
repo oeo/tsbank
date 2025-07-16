@@ -26,7 +26,7 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 
 // project domains
-import { Customer } from '../domains/customers/Customer';
+import { Customer } from '../core/customers/Customer';
 
 // shared utilities
 import { 
@@ -34,7 +34,7 @@ import {
   DomainEvent,
   Entity,
   ValueObject,
-} from '../shared';
+} from '../lib';
 ```
 
 ### 1.2. Type Definitions
@@ -140,22 +140,4 @@ The system is built using DDD principles.
 
 ### 3.2. How to Add a New Integration Provider
 
-1.  Add the new provider's implementation in the appropriate `src/integrations/` subdirectory (e.g., `src/integrations/kyc/NewKYC.ts`). It must implement the base `...Provider.ts` interface.
-2.  Add the new provider as an option in `config.yml`.
-3.  Update the `IntegrationFactory` in `src/config/integrations.ts` to recognize and instantiate the new provider.
-4.  Add necessary API keys and secrets to `.env.example` and your local `.env` file.
-
-## 4. Testing
-
-- **Unit Tests**: Place unit tests for domain logic alongside the source code in a `tests/` directory that mirrors the `src/` structure (e.g., tests for `src/domains/customers/Customer.ts` go in `tests/domains/customers/Customer.test.ts`).
-- **Integration Tests**: For testing interactions between components (e.g., service and repository, or external API integrations).
-- **End-to-End Tests**: For testing API endpoints.
-- **Command**: Run tests using `bun test`.
-
-## 5. Database
-
-- **EdgeDB**: We use EdgeDB as our primary database.
-- **Schema**: The schema is defined in `dbschema/default.esdl`.
-- **Migrations**: To create a new migration, run `edgedb migrate`. To apply migrations, run `docker-compose up` which should handle it, or `edgedb migrate --apply`.
-
-By following these conventions, we ensure the project remains robust, scalable, and easy to understand for all developers, including our AI development partners. 
+1.  Add the new provider's implementation in the appropriate `src/integrations/` subdirectory (e.g., `src/integrations/kyc/NewKYC.ts`). It must implement the base `...Provider.ts`

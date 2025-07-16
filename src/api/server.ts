@@ -3,21 +3,24 @@
  */
 
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { prettyJSON } from 'hono/pretty-json';
 import { logger as honoLogger } from 'hono/logger';
-import { logger } from '../infrastructure/Logger';
-import { createCustomerRoutes } from './routes/customers';
+import { logger } from '../lib/Logger';
 import { createAccountRoutes } from './routes/accounts';
+import { createCustomerRoutes } from './routes/customers';
 import { createTransactionRoutes } from './routes/transactions';
-
-// Dependencies
-import { CustomerRepository } from '../domains/customers/CustomerRepository';
-import { AccountRepository } from '../domains/accounts/AccountRepository';
-import { TransactionRepository } from '../domains/transactions/TransactionRepository';
 import { RabbitMQEventBus } from '../infrastructure/RabbitMQEventBus';
-import { CustomerService } from '../domains/customers/CustomerService';
-import { AccountService } from '../domains/accounts/AccountService';
-import { TransactionService } from '../domains/transactions/TransactionService';
 import { config } from '../config/AppConfig';
+
+// Data Repositories
+import { CustomerRepository } from '../core/customers/CustomerRepository';
+import { AccountRepository } from '../core/accounts/AccountRepository';
+import { TransactionRepository } from '../core/transactions/TransactionRepository';
+// Application Services
+import { CustomerService } from '../core/customers/CustomerService';
+import { AccountService } from '../core/accounts/AccountService';
+import { TransactionService } from '../core/transactions/TransactionService';
 
 const app = new Hono();
 

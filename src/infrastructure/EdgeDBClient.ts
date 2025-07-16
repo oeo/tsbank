@@ -3,7 +3,7 @@
  */
 
 import createClient from 'edgedb';
-import { logger } from './Logger';
+import { logger } from '../lib/Logger';
 
 const client = createClient();
 

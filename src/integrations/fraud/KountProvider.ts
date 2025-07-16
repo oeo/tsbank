@@ -3,7 +3,7 @@
  */
 
 import { FraudProvider, FraudCheckResult } from './FraudProvider';
-import { logger } from '../../infrastructure/Logger';
+import { logger } from '../../lib/Logger';
 
 export class KountProvider implements FraudProvider {
     constructor() {

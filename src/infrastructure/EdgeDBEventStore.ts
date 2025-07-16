@@ -2,10 +2,10 @@
  * @file EdgeDBEventStore.ts
  */
 
-import { DomainEvent } from '../shared/DomainEvent';
-import { EventStore } from '../shared/EventStore';
+import { DomainEvent } from '../lib/DomainEvent';
+import { EventStore } from '../lib/EventStore';
 import { edgedb } from './EdgeDBClient';
-import { logger } from './Logger';
+import { logger } from '../lib/Logger';
 
 class ConcurrencyError extends Error {
     constructor(message: string) {

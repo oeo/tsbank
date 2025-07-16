@@ -4,7 +4,7 @@
 
 import app from './api/server';
 import { config } from './config/AppConfig';
-import { logger } from './infrastructure/Logger';
+import { logger } from './lib/Logger';
 
 const port = config.get().server.port;
 

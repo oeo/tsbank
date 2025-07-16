@@ -3,12 +3,12 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import { CustomerRepository } from '../src/domains/customers/CustomerRepository';
-import { AccountRepository } from '../src/domains/accounts/AccountRepository';
-import { Customer } from '../src/domains/customers/Customer';
-import { Account } from '../src/domains/accounts/Account';
-import { Money } from '../src/shared/Money';
-import { logger } from '../src/infrastructure/Logger';
+import { CustomerRepository } from '../src/core/customers/CustomerRepository';
+import { AccountRepository } from '../src/core/accounts/AccountRepository';
+import { Customer } from '../src/core/customers/Customer';
+import { Account } from '../src/core/accounts/Account';
+import { Money } from '../src/lib/Money';
+import { logger } from '../src/lib/Logger';
 
 const seed = async () => {
     logger.info('Starting database seeding...');

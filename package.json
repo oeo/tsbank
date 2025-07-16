@@ -17,6 +17,7 @@
     "format": "bunx prettier --write src/**/*.ts"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.7.1",
     "amqplib": "^0.10.3",
     "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",

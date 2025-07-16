@@ -4,7 +4,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { KYCProvider, KYCVerificationResult } from './KYCProvider';
-import { logger } from '../../infrastructure/Logger';
+import { logger } from '../../lib/Logger';
 
 export class PersonaKYC implements KYCProvider {
     constructor(

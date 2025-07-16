@@ -4,8 +4,8 @@
 
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { validator } from 'hono/validator';
-import { CustomerService } from '../../domains/customers/CustomerService';
+import { zValidator } from '@hono/zod-validator';
+import { CustomerService } from '../../core/customers/CustomerService';
 
 export const createCustomerRoutes = (customerService: CustomerService) => {
     const customers = new Hono();
@@ -20,13 +20,7 @@ export const createCustomerRoutes = (customerService: CustomerService) => {
     // Routes
     customers.post(
         '/',
-        validator('json', (value, c) => {
-            const parsed = createCustomerSchema.safeParse(value);
-            if (!parsed.success) {
-                return c.json({ error: 'Invalid input', details: parsed.error.issues }, 400);
-            }
-            return parsed.data;
-        }),
+        zValidator('json', createCustomerSchema),
         async (c) => {
             const { name, email, phone } = c.req.valid('json');
             try {

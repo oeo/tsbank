@@ -2,19 +2,18 @@
  * @file tests/api/accounts.test.ts
  */
 
-// @ts-expect-error
 import { describe, it, expect, mock } from 'bun:test';
 import { Hono } from 'hono';
 import { createAccountRoutes } from '../../src/api/routes/accounts';
-import { AccountService } from '../../src/domains/accounts/AccountService';
-import { Account } from '../../src/domains/accounts/Account';
-import { Money } from '../../src/shared/Money';
+import { AccountService } from '../../src/core/accounts/AccountService';
+import { Account } from '../../src/core/accounts/Account';
+import { Money } from '../../src/lib/Money';
 
 const mockAccountService = {
-    createAccount: mock(async (customerId, type) => Account.create('mock-acc-id', customerId, type, Money.create(0, 'USD'))),
+    createAccount: mock(async (customerId, type) => Account.create('mock-id', customerId, type, Money.create(0, 'USD'))),
     getAccountById: mock(async (id) => {
-        if (id === 'mock-acc-id') {
-            return Account.create('mock-acc-id', 'mock-cust-id', 'checking', Money.create(100, 'USD'));
+        if (id === 'mock-id') {
+            return Account.create('mock-id', 'mock-cust-id', 'checking', Money.create(100, 'USD'));
         }
         return null;
     }),
@@ -39,16 +38,16 @@ describe('Account API', () => {
         const res = await app.fetch(req);
         expect(res.status).toBe(201);
 
-        const json = await res.json();
-        expect(json).toHaveProperty('id', 'mock-acc-id');
+        const json = await res.json() as { id: string };
+        expect(json).toHaveProperty('id', 'mock-id');
     });
 
     it('should retrieve an existing account', async () => {
-        const getReq = new Request('http://localhost/accounts/mock-acc-id');
+        const getReq = new Request('http://localhost/accounts/mock-id');
         const getRes = await app.fetch(getReq);
         
         expect(getRes.status).toBe(200);
-        const json = await getRes.json();
-        expect(json.id).toBe('mock-acc-id');
+        const json = await getRes.json() as { id: string };
+        expect(json.id).toBe('mock-id');
     });
 }); 

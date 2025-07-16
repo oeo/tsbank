@@ -4,31 +4,23 @@
 
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { validator } from 'hono/validator';
-import { TransactionService } from '../../domains/transactions/TransactionService';
-import { Money } from '../../shared/Money';
+import { zValidator } from '@hono/zod-validator';
+import { TransactionService } from '../../core/transactions/TransactionService';
+import { Money } from '../../lib/Money';
+
+const createTransactionSchema = z.object({
+    fromAccountId: z.string().uuid(),
+    toAccountId: z.string().uuid(),
+    amount: z.number().positive(),
+    currency: z.string().length(3),
+});
 
 export const createTransactionRoutes = (transactionService: TransactionService) => {
-    const transactions = new Hono();
+    const app = new Hono();
 
-    // Schemas
-    const createTransactionSchema = z.object({
-        fromAccountId: z.string().uuid(),
-        toAccountId: z.string().uuid(),
-        amount: z.number().positive(),
-        currency: z.string().length(3),
-    });
-
-    // Routes
-    transactions.post(
+    app.post(
         '/transfer',
-        validator('json', (value, c) => {
-            const parsed = createTransactionSchema.safeParse(value);
-            if (!parsed.success) {
-                return c.json({ error: 'Invalid input', details: parsed.error.issues }, 400);
-            }
-            return parsed.data;
-        }),
+        zValidator('json', createTransactionSchema),
         async (c) => {
             const { fromAccountId, toAccountId, amount, currency } = c.req.valid('json');
             try {
@@ -41,7 +33,7 @@ export const createTransactionRoutes = (transactionService: TransactionService) 
         }
     );
 
-    transactions.get('/:id', async (c) => {
+    app.get('/:id', async (c) => {
         const id = c.req.param('id');
         const transaction = await transactionService.getTransactionById(id); // Assumes service has this method
         if (!transaction) {
@@ -50,5 +42,5 @@ export const createTransactionRoutes = (transactionService: TransactionService) 
         return c.json(transaction);
     });
 
-    return transactions;
+    return app;
 }; 

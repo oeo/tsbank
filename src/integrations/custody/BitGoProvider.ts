@@ -4,7 +4,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { CustodyProvider } from './CustodyProvider';
-import { logger } from '../../infrastructure/Logger';
+import { logger } from '../../lib/Logger';
 
 export class BitGoProvider implements CustodyProvider {
     private apiKey: string;
