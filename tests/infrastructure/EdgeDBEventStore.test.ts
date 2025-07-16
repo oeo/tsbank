@@ -3,18 +3,20 @@
  */
 
 // @ts-ignore
-import { describe, it, expect, beforeEach } from 'bun:test';
+import { describe, it, expect, beforeAll } from 'bun:test';
 import { EdgeDBEventStore } from '../../src/infrastructure/EdgeDBEventStore';
 import { createDomainEvent, DomainEvent } from '../../src/lib/DomainEvent';
-import edgedb from '../../src/infrastructure/EdgeDBClient';
+import createClient from 'edgedb';
+
+const client = createClient();
 
 describe('EdgeDBEventStore', () => {
     const eventStore = new EdgeDBEventStore();
 
     it('should save and retrieve events for an aggregate', async () => {
         const aggregateId = `test-agg-${Date.now()}`;
-        await edgedb.execute(`DELETE DomainEvent FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
-        await edgedb.execute(`DELETE AggregateVersion FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
+        await client.execute(`DELETE DomainEvent FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
+        await client.execute(`DELETE AggregateVersion FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
 
         const event1 = createDomainEvent({
             aggregateId,
@@ -40,8 +42,8 @@ describe('EdgeDBEventStore', () => {
 
     it('should throw a concurrency error for incorrect expected version', async () => {
         const aggregateId = `test-agg-${Date.now()}`;
-        await edgedb.execute(`DELETE DomainEvent FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
-        await edgedb.execute(`DELETE AggregateVersion FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
+        await client.execute(`DELETE DomainEvent FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
+        await client.execute(`DELETE AggregateVersion FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
 
         const event1 = createDomainEvent({
             aggregateId,
@@ -66,8 +68,8 @@ describe('EdgeDBEventStore', () => {
 
     it('should correctly save events for an existing aggregate', async () => {
         const aggregateId = `test-agg-${Date.now()}`;
-        await edgedb.execute(`DELETE DomainEvent FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
-        await edgedb.execute(`DELETE AggregateVersion FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
+        await client.execute(`DELETE DomainEvent FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
+        await client.execute(`DELETE AggregateVersion FILTER .aggregate_id = <str>$aggregateId;`, { aggregateId });
 
         const event1 = createDomainEvent({
             aggregateId,
