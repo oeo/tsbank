@@ -88,18 +88,20 @@ bun test --watch
 
 ## 🐳 Deployment
 
-The application is containerized using Docker.
+The application's supporting services (database, message broker) are containerized using Docker for easy setup.
 
 ```bash
 # Build and deploy all services
 docker-compose up --build -d
+```
 
-# View logs for the banking application
-docker-compose logs -f banking-app
+You can then run the application locally, and it will connect to the services running in Docker.
+
+```bash
+bun dev
 ```
 
 ## 🔒 Security
 
-- **Encryption**: Sensitive data in the database is encrypted.
 - **Audit Trail**: Event sourcing provides a complete, immutable log of all actions.
 - **Configuration**: Secrets are strictly managed via environment variables. 

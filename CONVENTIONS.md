@@ -1,6 +1,6 @@
 # Coding and Architectural Conventions
 
-This document provides the conventions for developing the Core Banking System. Adhering to these conventions is crucial for maintaining code quality, consistency, and ease of maintenance.
+This document provides the conventions for developing this project. Adhering to these conventions is crucial for maintaining code quality, consistency, and ease of maintenance.
 
 ## 1. Code Style (ALIEN)
 
@@ -25,10 +25,10 @@ Group imports logically with empty lines between groups. If an import has 4 or m
 import { Hono } from 'hono';
 import { z } from 'zod';
 
-// project domains
+// project core
 import { Customer } from '../core/customers/Customer';
 
-// shared utilities
+// project libraries
 import { 
   AggregateRoot, 
   DomainEvent,
@@ -61,22 +61,16 @@ interface AccountDetails {
 
 - Use private class fields with a `#` prefix instead of the `private` keyword.
 - Group related fields together.
-- Initialize fields at declaration when possible.
+- Initialize fields via the `apply()` method in aggregates.
 
 ```typescript
 export class Account extends AggregateRoot<string> {
-  #customerId: string;
-  #balance: Money;
-  #status: AccountStatus;
-  
-  #eventBus: EventBus;
+  #customerId!: string;
+  #balance!: Money;
+  #status!: AccountStatus;
 
-  constructor(id: string, customerId: string, eventBus: EventBus) {
+  private constructor(id: string) {
     super(id);
-    this.#customerId = customerId;
-    this.#balance = Money.create(0, 'USD');
-    this.#status = 'pending';
-    this.#eventBus = eventBus;
   }
 }
 ```
@@ -109,18 +103,18 @@ deposit(amount: Money): void {
 
 The system is built using DDD principles.
 
-- **Domains**: The core logic is organized into domains (`customers`, `accounts`, etc.) located in `src/domains/`.
+- **Core**: The core logic is organized into domains (`customers`, `accounts`, etc.) located in `src/core/`.
 - **Aggregates**: Each domain has an Aggregate Root (e.g., `Customer.ts`, `Account.ts`) that enforces business rules and invariants. It is the only object that can be loaded from the repository.
 - **Entities**: Objects with an identity that are not aggregate roots.
 - **Value Objects**: Immutable objects without identity, defined by their attributes (e.g., `Money.ts`).
-- **Repositories**: Provide an abstraction for persisting and retrieving Aggregate Roots.
+- **Repositories**: Provide an abstraction for persisting and retrieving Aggregate Roots. The repository interface for a domain is defined in that domain's `primitives.ts` file (e.g., `IAccountRepository` in `src/core/accounts/primitives.ts`).
 - **Services**: Contain domain logic that doesn't naturally fit within an aggregate (e.g., coordinating between aggregates or external systems).
 
 ### 2.2. Event Sourcing
 
 - **Pattern**: State changes are not saved directly. Instead, they are recorded as a sequence of immutable `DomainEvent`s. The current state of an aggregate is derived by replaying its events.
 - **Events**: Events are past-tense statements about something that happened in the domain (e.g., `CustomerCreated`, `AccountCredited`). They are stored in the `EventStore`.
-- **Event Bus**: An `EventBus` (`RabbitMQ`) is used to publish events to other parts of the system or external services for asynchronous processing.
+- **Event Bus**: An `EventBus` is used to publish events to other parts of the system or external services for asynchronous processing.
 
 ### 2.3. Configuration Management
 
@@ -133,10 +127,12 @@ The system is built using DDD principles.
 
 ### 3.1. How to Add a New Domain
 
-1.  Create a new directory under `src/domains/`.
-2.  Define the Aggregate Root, Events, Repository interface, and Service.
-3.  Implement the repository in the `infrastructure` layer.
-4.  Add API routes in a new file under `src/api/routes/`.
+1.  Create a new directory under `src/core/`.
+2.  Define the Aggregate Root and Events.
+3.  Define the repository interface (e.g., `INewDomainRepository`) in a `primitives.ts` file within the new domain directory.
+4.  Define the Application Service.
+5.  Implement the repository in the `infrastructure` layer.
+6.  Add API routes in a new file under `src/api/routes/`.
 
 ### 3.2. How to Add a New Integration Provider
 
