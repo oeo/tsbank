@@ -1,5 +1,3 @@
-![CI](./actions/workflows/ci.yml/badge.svg)
-
 # Core Banking DDD System
 
 # TSBank
@@ -10,7 +8,7 @@ A Domain-Driven Design (DDD) core banking system with event sourcing, built with
 
 1.  **Clone the repository**
     ```bash
-    git clone . 
+    git clone .
     cd tsbank
     ```
 
@@ -63,7 +61,7 @@ This file holds all secrets and environment-specific connection strings. It shou
 
 The system is architected using principles of Domain-Driven Design (DDD) and Event Sourcing.
 
-### Core 
+### Core
 The core business logic is segregated into modules located in `core`, each representing a distinct part of the banking business:
 - **`customers`**: Manages customer information, onboarding, and KYC status.
 - **`accounts`**: Handles creation and management of customer accounts (checking, savings, etc.).
@@ -108,4 +106,4 @@ bun dev
 ## 🔒 Security
 
 - **Audit Trail**: Event sourcing provides a complete, immutable log of all actions.
-- **Configuration**: Secrets are strictly managed via environment variables. 
+- **Configuration**: Secrets are strictly managed via environment variables.
